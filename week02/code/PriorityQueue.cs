@@ -31,8 +31,9 @@
         }
 
         // Remove and return the item with the highest priority
-        var value = _queue[highPriorityIndex].Value;
-        return value;
+       var value = _queue[highPriorityIndex].Value;
+                  _queue.RemoveAt(highPriorityIndex);
+                   return value;
     }
 
     // DO NOT MODIFY THE CODE IN THIS METHOD

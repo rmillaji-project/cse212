@@ -104,7 +104,8 @@ public class TakingTurnsQueueTests
         for (int i = 0; i < 10; i++)
         {
             var person = players.GetNextPerson();
-            Assert.AreEqual(expectedResult[i].Name, person.Name);
+            Assert.AreEqual(expectedResult[i].Name, person.Name,
+    $"Failed at iteration {i}. Expected {expectedResult[i].Name}, got {person.Name}");
         }
 
         // Verify that the people with infinite turns really do have infinite turns.
