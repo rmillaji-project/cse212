@@ -19,11 +19,26 @@ public static class SetsAndMaps
     /// that there were no duplicates) and therefore should not be returned.
     /// </summary>
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
-    public static string[] FindPairs(string[] words)
+ public static string[] FindPairs(string[] words)
+{
+    var wordsSet = new HashSet<string>(words);
+    var pairs = new List<string>();
+
+    foreach (var word in words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var reverse = word[1].ToString() + word[0].ToString();
+
+
+        if (wordsSet.Contains(reverse) && word[0] != word[1])
+        {
+            pairs.Add(word + " & " + reverse);
+            wordsSet.Remove(word);
+            wordsSet.Remove(reverse);
+        }
     }
+
+    return pairs.ToArray();
+}
 
     /// <summary>
     /// Read a census file and summarize the degrees (education)
@@ -42,7 +57,16 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            var degree = fields[3].Trim();
+
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++;
+            }
+            else
+            {
+                degrees[degree] = 1;
+            }
         }
 
         return degrees;
@@ -65,10 +89,33 @@ public static class SetsAndMaps
     /// using the [] notation.
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
+{
+    var counts = new Dictionary<char, int>();
+
+    foreach (var ch in word1.ToLower())
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        if (ch != ' ')
+        {
+            if (counts.ContainsKey(ch))
+                counts[ch]++;
+            else
+                counts[ch] = 1;
+        }
     }
+
+    foreach (var ch in word2.ToLower())
+    {
+        if (ch != ' ')
+        {
+            if (!counts.ContainsKey(ch))
+                return false;
+
+            counts[ch]--;
+        }
+    }
+
+    return counts.Values.All(count => count == 0);
+}
 
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
@@ -101,6 +148,22 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        var results = new List<string>();
+
+        foreach (var feature in featureCollection!.Features)
+        {
+            results.Add($"{feature.Properties.Place} - Mag {feature.Properties.Mag}");
+        }
+
+        return results.ToArray();
     }
 }
+
+
+
+
+
+
+
+
+
