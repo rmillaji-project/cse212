@@ -1,4 +1,5 @@
 using System.Collections;
+using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Extensions;
 
 public static class Recursion
 {
@@ -12,12 +13,17 @@ public static class Recursion
     /// to identify a base case (terminating case).  If the value of
     /// n <= 0, just return 0.   A loop should not be used.
     /// </summary>
-    public static int SumSquaresRecursive(int n)
-    {
-        // TODO Start Problem 1
-        return 0;
-    }
 
+   public static int SumSquaresRecursive(int n)
+{
+    // TODO Start Problem 1
+   if (n <= 0)
+{
+    return 0;
+}
+
+return SumSquaresRecursive(n - 1) + n * n;
+}
     /// <summary>
     /// #############
     /// # Problem 2 #
@@ -37,11 +43,23 @@ public static class Recursion
     /// You can assume that the size specified is always valid (between 1 
     /// and the length of the letters list).
     /// </summary>
-    public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
+public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
+{
+    if (word.Length == size)
     {
-        // TODO Start Problem 2
+        results.Add(word);
+        return;
     }
 
+    for (int i = 0; i < letters.Length; i++)
+    {
+        string newWord = word + letters[i];
+
+        string remainingLetters = letters.Remove(i, 1);
+
+        PermutationsChoose(results, remainingLetters, size, newWord);
+    }
+}
     /// <summary>
     /// #############
     /// # Problem 3 #
@@ -84,24 +102,37 @@ public static class Recursion
     /// 'remember' has already been added as an input parameter to 
     /// the function for you to complete this task.
     /// </summary>
-    public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember = null)
+   public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember = null)
+{
+    // Base Cases
+    if (s == 0)
+        return 0;
+    if (s == 1)
+        return 1;
+    if (s == 2)
+        return 2;
+    if (s == 3)
+        return 4;
+
+    // TODO Start Problem 3
+    if (remember == null)
     {
-        // Base Cases
-        if (s == 0)
-            return 0;
-        if (s == 1)
-            return 1;
-        if (s == 2)
-            return 2;
-        if (s == 3)
-            return 4;
-
-        // TODO Start Problem 3
-
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
-        return ways;
+        remember = new Dictionary<int, decimal>();
     }
+
+    if (remember.ContainsKey(s))
+    {
+        return remember[s];
+    }
+
+    decimal ways = CountWaysToClimb(s - 1, remember)
+                 + CountWaysToClimb(s - 2, remember)
+                 + CountWaysToClimb(s - 3, remember);
+
+    remember[s] = ways;
+
+    return ways;
+}
 
     /// <summary>
     /// #############
@@ -116,12 +147,37 @@ public static class Recursion
     /// Using recursion, insert all possible binary strings for a given pattern into the results list.  You might find 
     /// some of the string functions like IndexOf and [..X] / [X..] to be useful in solving this problem.
     /// </summary>
-    public static void WildcardBinary(string pattern, List<string> results)
+
+   public static void WildcardBinary(string pattern, List<string> results)
+{
+    WildcardBinaryRecursive(pattern, results, "");
+
+}
+     private static void WildcardBinaryRecursive(
+    string pattern,
+    List<string> results,
+    string current)
+{
+    if (pattern.Length == 0)
     {
-        // TODO Start Problem 4
+        results.Add(current);
+        return;
     }
 
-    /// <summary>
+    char first = pattern[0];
+    string remaining = pattern[1..];
+
+       if (first == '*')
+    {
+        WildcardBinaryRecursive(remaining, results, current + "0");
+        WildcardBinaryRecursive(remaining, results, current + "1");
+    }
+    else
+    {
+        WildcardBinaryRecursive(remaining, results, current + first);
+    }
+}
+ /// <summary>
     /// Use recursion to insert all paths that start at (0,0) and end at the
     /// 'end' square into the results list.
     /// </summary>
